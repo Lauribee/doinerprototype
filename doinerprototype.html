@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doiner Prototype</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+        }
+
+        .h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        #searchInput:focus {
+            border-color: #00843c;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        #searchButton {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1fc66b 0%, #10552f 100%);
+            color: white;
+            background-color: #00843c;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        #searchButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgb(0, 132, 60);
+        }
+
+        #searchButton:active {
+            transform: translateY(0)
+        }
+
+        #results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .recipe {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .recipe:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .recipe h3 {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .recipe img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe:hover img {
+            transform: scale(1.05);
+        }
+
+        .nutrition-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .recipe p {
+            margin: 0.3rem 0;
+            font-size: 0.95rem;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .recipe p strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            font-size: 1.1rem;
+            padding: 2rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #667eea;
+            padding: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            padding: 2rem;
+            background: rgba(127, 140, 141, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(127, 140, 141, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            #searchInput, #searchButton {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+
+            #results {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nutrition-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            #searchInput, #searchButton {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .recipe {
+                padding: 1rem;
+            }
+
+            .recipe img {
+                height: 150px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Doiner</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for yummy food">
+            <button id="searchButton" type="submit">Search</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+        const resultsdiv = document.getElementById('results');
+
+        searchButton.addEventListener('click', searchRecipes);
+        
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchRecipes();
+            }
+        });
+
+        function searchRecipes() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                alert('Please enter a search term.');
+                return;
+            }
+            const apiKey = '630b5e97ed354669b98399e73eb7e514';
+            const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=5&addRecipeInformation=true&addRecipeNutrition=true&apiKey=${apiKey}`;
+
+            resultsdiv.innerHTML = '<div class="loading">Loading recipes...</div>';
+
+            //Call the spoonacular API
+            fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                //clear the placeholder text
+                resultsdiv.innerHTML = '';
+                if (!data.results || data.results.length === 0) {
+                    resultsdiv.innerHTML = '<div class="no-results">No recipes found. Please try a different search term.</div>';
+                    return;
+                }
+
+                //Loop through each recipe result
+                data.results.forEach(recipe => {
+                    //Extract data we need
+                    const title = recipe.title;
+                    const image = recipe.image;
+                    const id = recipe.id;
+
+                    //Fetch nutrition data for this recipe using its ID
+                    const nutritionUrl = `https://api.spoonacular.com/recipes/${id}/nutritionWidget.json?apiKey=${apiKey}`;
+                    
+                    fetch(nutritionUrl)
+                    .then(response => response.json())
+                    .then(nutritionData => {
+                        let calories = 'N/A', protein = 'N/A', fat = 'N/A', carbs = 'N/A';
+                        
+                        if (nutritionData && nutritionData.nutrients) {
+                            const nutrients = nutritionData.nutrients;
+                            const calInfo = nutrients.find(n => n.name === 'Calories');
+                            const proteinInfo = nutrients.find(n => n.name === 'Protein');
+                            const fatInfo = nutrients.find(n => n.name === 'Fat');
+                            const carbsInfo = nutrients.find(n => n.name === 'Carbohydrates');
+                            
+                            if (calInfo) calories = Math.round(calInfo.amount) + calInfo.unit;
+                            if (proteinInfo) protein = Math.round(proteinInfo.amount) + proteinInfo.unit;
+                            if (fatInfo) fat = Math.round(fatInfo.amount) + fatInfo.unit;
+                            if (carbsInfo) carbs = Math.round(carbsInfo.amount) + carbsInfo.unit;
+                        }
+
+                        //Create a container div for this recipe
+                        const recipeDiv = document.createElement('div');
+                        recipeDiv.className = 'recipe';
+
+                        //Build the inner HTML for the recipe (image, title, and nutrition info)
+                        recipeDiv.innerHTML = `
+                            <h3>${title}</h3>
+                            <img src="${image}" alt="${title}">
+                            <p><strong>Calories:</strong> ${calories}</p>
+                            <p><strong>Protein:</strong> ${protein}</p>
+                            <p><strong>Fat:</strong> ${fat}</p>
+                            <p><strong>Carbohydrates:</strong> ${carbs}</p>
+                        `;
+
+                        //Append this recipe's HTML to the results container
+                        resultsdiv.appendChild(recipeDiv);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching nutrition data:', error);
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching recipes:', error);
+                resultsdiv.innerHTML = '<div class="error">An error occurred while fetching recipes. Please try again.</div>';
+            });
+        }
+    </script>
+    
+</body>
+
+</html>
+
