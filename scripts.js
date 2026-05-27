@@ -18,7 +18,7 @@
                 return;
             }
             const apiKey = '630b5e97ed354669b98399e73eb7e514';
-            const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=5&addRecipeInformation=true&addRecipeNutrition=true&apiKey=${apiKey}`;
+            const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=5&addRecipeInformation=true&apiKey=${apiKey}`;
 
             resultsdiv.innerHTML = '<div class="loading">Loading recipes...</div>';
 
@@ -55,31 +55,17 @@
                             const fatInfo = nutrients.find(n => n.name === 'Fat');
                             const carbsInfo = nutrients.find(n => n.name === 'Carbohydrates');
                             
-                            if (calInfo) calories = Math.round(calInfo.amount) + calInfo.unit;
-                            if (proteinInfo) protein = Math.round(proteinInfo.amount) + proteinInfo.unit;
-                            if (fatInfo) fat = Math.round(fatInfo.amount) + fatInfo.unit;
-                            if (carbsInfo) carbs = Math.round(carbsInfo.amount) + carbsInfo.unit;
+                            if (calInfo) calories = Math.round(calInfo.amount) + ' ' + calInfo.unit;
+                            if (proteinInfo) protein = Math.round(proteinInfo.amount) + ' ' + proteinInfo.unit;
+                            if (fatInfo) fat = Math.round(fatInfo.amount) + ' ' + fatInfo.unit;
+                            if (carbsInfo) carbs = Math.round(carbsInfo.amount) + ' ' + carbsInfo.unit;
                         }
 
-                        //Create a container div for this recipe
-                        const recipeDiv = document.createElement('div');
-                        recipeDiv.className = 'recipe';
-
-                        //Build the inner HTML for the recipe (image, title, and nutrition info)
-                        recipeDiv.innerHTML = `
-                            <h3>${title}</h3>
-                            <img src="${image}" alt="${title}">
-                            <p><strong>Calories:</strong> ${calories}</p>
-                            <p><strong>Protein:</strong> ${protein}</p>
-                            <p><strong>Fat:</strong> ${fat}</p>
-                            <p><strong>Carbohydrates:</strong> ${carbs}</p>
-                        `;
-
-                        //Append this recipe's HTML to the results container
-                        resultsdiv.appendChild(recipeDiv);
+                        displayRecipe(title, image, calories, protein, fat, carbs);
                     })
                     .catch(error => {
                         console.error('Error fetching nutrition data:', error);
+                        displayRecipe(title, image, 'N/A', 'N/A', 'N/A', 'N/A');
                     });
                 });
             })
@@ -87,4 +73,23 @@
                 console.error('Error fetching recipes:', error);
                 resultsdiv.innerHTML = '<div class="error">An error occurred while fetching recipes. Please try again.</div>';
             });
+        }
+
+        function displayRecipe(title, image, calories, protein, fat, carbs) {
+            //Create a container div for this recipe
+            const recipeDiv = document.createElement('div');
+            recipeDiv.className = 'recipe';
+
+            //Build the inner HTML for the recipe (image, title, and nutrition info)
+            recipeDiv.innerHTML = `
+                <h3>${title}</h3>
+                <img src="${image}" alt="${title}">
+                <p><strong>Calories:</strong> ${calories}</p>
+                <p><strong>Protein:</strong> ${protein}</p>
+                <p><strong>Fat:</strong> ${fat}</p>
+                <p><strong>Carbohydrates:</strong> ${carbs}</p>
+            `;
+
+            //Append this recipe's HTML to the results container
+            resultsdiv.appendChild(recipeDiv);
         }
